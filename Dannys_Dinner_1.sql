@@ -108,7 +108,7 @@ select m. customer_id
 from sales s 
 	 inner join members m on s.customer_id = m.customer_id
 	 inner join menu men on s.product_id = men.product_id
---where join_date<order_date
+         where join_date<order_date
 )
 select customer_id
 	   ,SUM(points) as total_points
