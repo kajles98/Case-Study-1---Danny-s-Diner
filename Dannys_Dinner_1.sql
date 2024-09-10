@@ -134,6 +134,7 @@ Group by s.customer_id
 --bonus
 
 --Recreate the following table output using the available data:
+	
 select s.customer_id
 	   ,s.order_date
 	   ,m.product_name
@@ -146,6 +147,8 @@ from sales s
 	 inner join menu m on s.product_id = m.product_id
 	 left join members mem on s.customer_id=mem.customer_id
 
+-- ranking 
+	
 with cte 
 as (
 select s.customer_id
@@ -153,22 +156,22 @@ select s.customer_id
 	   ,m.product_name
 	   ,m.price
 	   ,case 
-			when s.order_date>=mem.join_date then 'Y' 
-			else 'N'
-			end as member
+		when s.order_date>=mem.join_date then 'Y' 
+		else 'N'
+		end as member
 from sales s 
 	 inner join menu m on s.product_id = m.product_id
 	 left join members mem on s.customer_id=mem.customer_id
 	 )
 
 select customer_id
-	   ,order_date
-	   ,product_name
-	   ,price
-	   ,member
-	   ,case
-			when member = 'Y' then dense_rank() over (PARTITION by customer_id,member order by order_date) 
-			else NULL 
-			end as ranking
+       ,order_date
+       ,product_name
+       ,price
+       ,member
+       ,case
+	   when member = 'Y' then dense_rank() over (PARTITION by customer_id,member order by order_date) 
+	   else NULL 
+           end as ranking
 from cte
 
